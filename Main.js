@@ -13,29 +13,26 @@ app.use("/public", express.static(__dirname + "/public"));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// Handle no Date value in POST
-app.get('/api/', function(req, res) {
-  // Init vars.
-  const now = new Date()
-
-  // Return Response.
-  res.send({unix: Date.now(), utc: now.toUTCString()});
-});
 
 // Handle date value in POST. Can be unix, or utc.
 app.get('/api/:date', function(req, res) {
   // Init vars.
   var date = new Date();
 
-  // Verify if the passed date is a interger.
-  if(/^\d*$/.test(req.params.date)){ date.setTime(req.params.date); }
-  else { date = new Date(req.params.date); }
+  if(req.params.date) {
+    // Verify if the passed date is a interger.
+    if(/^\d*$/.test(req.params.date)){ date.setTime(req.params.date); }
+    else { date = new Date(req.params.date); }
 
-  // Return Response.
-  if(!date.getTime()) { res.send(({error: "Invalid date given"})) }
-  else { res.send({unix: date.getTime(), utc: date.toUTCString()}); }
-}
-);
+    // Return Response.
+    if(!date.getTime()) { res.send({error : "Invalid Date"}) }
+    else { res.send({unix: date.getTime(), utc: date.toUTCString()}); }
+  } else { 
+    // Return Response.
+    res.send({unix: Date.now(), utc: now.toUTCString()});
+     }
+  
+});
 
 
 
